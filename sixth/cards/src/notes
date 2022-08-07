@@ -1,0 +1,15 @@
+Cuando realizamos un programa en java, si ejecutamos
+
+java File.java
+
+solo nos ejecuta un solo archivo (diablos habia olvidado eso)
+
+Si nuestro fichero depende de mas de un archivo primero compilamos con
+
+javac *.java
+
+Luego ejecutamos nuestra clase que tiene el metodo main de la siguiente forma
+
+java File
+
+sin incluir la extension .java
