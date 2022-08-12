@@ -1,19 +1,21 @@
 import java.util.*;
+import java.security.*;
 
 public class Chess{
     public static void main(String[] args){
         int[] horizontal = new int[8];
         int[] vertical = new int[8];
         
-        int INITIAL_ROW = 0;
-        int INITIAL_COLUMN = 0;
+        final int INITIAL_ROW = 4;
+        final int INITIAL_COLUMN = 0;
         
         int currentRow = INITIAL_ROW;
         int currentColumn = INITIAL_COLUMN;
 
         int movementCounter = 0;
 
-        Random rand = new Random();
+        // Random random = new Random();
+        SecureRandom random = new SecureRandom();
         
         horizontal[0] = 2;
         horizontal[1] = 1;
@@ -40,10 +42,43 @@ public class Chess{
         System.out.println();
         
         List<Integer> availableMovements = new ArrayList<Integer>();
-        availableMovements = getAvailableMovements(board, currentRow, currentColumn, horizontal, vertical);
         
-        for(int i = 0; i < availableMovements.size(); i++)
-            System.out.println(availableMovements.get(i));
+        // availableMovements = getAvailableMovements(board, currentRow, currentColumn, horizontal, vertical);
+        // for(int i = 0; i < availableMovements.size(); i++)
+        //     System.out.println(availableMovements.get(i));
+
+        // set first position as visited
+        board[currentRow][currentColumn] = true;
+        for(int i = 0; i < 64; i++){
+            availableMovements = getAvailableMovements(board, currentRow, currentColumn, horizontal, vertical);
+            if(availableMovements.size() == 0){
+                System.out.println("No movements available, max score: " + (i - 1));
+                break;
+            }
+            // int min = getMin(availableMovements);
+            // int max = getMax(availableMovements);
+            // int movement = min + random.nextInt(max + 1 - min);
+            int randomMovement = random.nextInt(availableMovements.size());
+            int movement = availableMovements.get(randomMovement);
+            System.out.println("Step: " + i);
+            // System.out.println("Min: " + getMin(availableMovements) + ", Max: " + getMax(availableMovements));
+            System.out.printf("Available movements: (Size: %d) ", availableMovements.size());
+            for(int j = 0; j < availableMovements.size(); j++){
+                System.out.printf(", %d", availableMovements.get(j));
+            }
+            System.out.println();
+            System.out.println("Next movement value: " + movement);
+            System.out.println("Location: X: " + currentRow + ", Y: " + currentColumn);
+            System.out.println("Movement: " + movement + " -> X: " + horizontal[movement] + ", Y: " + vertical[movement]);
+            // System.out.println("New location: X: " + (currentRow + vertical[movement]) + ", Y: " + (currentColumn + horizontal[movement]));
+            // currentRow += vertical[movement];
+            // currentColumn += horizontal[movement];
+            currentRow += horizontal[movement];
+            currentColumn += vertical[movement];
+            board[currentRow][currentColumn] = true;
+            availableMovements.clear();
+            System.out.println();
+        }
 
         // if(isInBounds(currentRow, currentColumn, rowMovement, columnMovement)){
         //     currentRow += vertical[movementCounter];
@@ -52,6 +87,7 @@ public class Chess{
 
     }
 
+    /*
     public static boolean isInBounds(int currentRow, int currentColumn, int rowMovement, int columnMovement){
         boolean isXInBounds = false;
         boolean isYInBounds = false;
@@ -62,17 +98,46 @@ public class Chess{
         if(isXInBounds && isYInBounds) return true;
         return false;
     }
+    */
+    
+    public static boolean isInBounds(int row, int column){
+        boolean isXInBounds = false;
+        boolean isYInBounds = false;
+        if(row > 0 && row < 8) isXInBounds = true;
+        if(column > 0 && column < 8) isYInBounds = true;
+        if(isXInBounds && isYInBounds) return true;
+        return false;
+    }
 
     public static List<Integer> getAvailableMovements(boolean[][] board, int currentRow, int currentColumn, int[] horizontal, int[] vertical){
         List<Integer> availableMovements = new ArrayList<Integer>();
         for(int i = 0; i < 8; i++){
-            int rowMovement = currentRow + vertical[i];
-            int columnMovement = currentColumn +  horizontal[i];
-            if(isInBounds(currentRow, currentColumn, rowMovement, columnMovement))
+            int rowMovement = currentRow + horizontal[i];
+            int columnMovement = currentColumn + vertical[i];
+            // if(isInBounds(currentRow, currentColumn, rowMovement, columnMovement))
+            if(isInBounds(rowMovement, columnMovement))
                 if(!board[rowMovement][columnMovement])
                     availableMovements.add(i);
+                    // System.out.println("Position: X->" + rowMovement + ", Y->" + columnMovement + " ... Is not available");
+                //else availableMovements.add(i);
         }
         return availableMovements;
+    }
+
+    public static int getMin(List<Integer> collection){
+        int min = collection.get(0);
+        for(int i = 1; i < collection.size(); i++){
+            if(collection.get(i) < min) min = collection.get(i);
+        }
+        return min;
+    }
+
+    public static int getMax(List<Integer> collection){
+        int max = collection.get(0);
+        for(int i = 1; i < collection.size(); i++){
+            if(collection.get(i) > max) max = collection.get(i);
+        }
+        return max;
     }
 
 }
