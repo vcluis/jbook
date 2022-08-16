@@ -55,13 +55,9 @@ public class Chess{
                 System.out.println("No movements available, max score: " + (i - 1));
                 break;
             }
-            // int min = getMin(availableMovements);
-            // int max = getMax(availableMovements);
-            // int movement = min + random.nextInt(max + 1 - min);
             int randomMovement = random.nextInt(availableMovements.size());
             int movement = availableMovements.get(randomMovement);
             System.out.println("Step: " + i);
-            // System.out.println("Min: " + getMin(availableMovements) + ", Max: " + getMax(availableMovements));
             System.out.printf("Available movements: (Size: %d) ", availableMovements.size());
             for(int j = 0; j < availableMovements.size(); j++){
                 System.out.printf(", %d", availableMovements.get(j));
@@ -70,9 +66,6 @@ public class Chess{
             System.out.println("Next movement value: " + movement);
             System.out.println("Location: X: " + currentRow + ", Y: " + currentColumn);
             System.out.println("Movement: " + movement + " -> X: " + horizontal[movement] + ", Y: " + vertical[movement]);
-            // System.out.println("New location: X: " + (currentRow + vertical[movement]) + ", Y: " + (currentColumn + horizontal[movement]));
-            // currentRow += vertical[movement];
-            // currentColumn += horizontal[movement];
             currentRow += horizontal[movement];
             currentColumn += vertical[movement];
             board[currentRow][currentColumn] = true;
@@ -87,19 +80,6 @@ public class Chess{
 
     }
 
-    /*
-    public static boolean isInBounds(int currentRow, int currentColumn, int rowMovement, int columnMovement){
-        boolean isXInBounds = false;
-        boolean isYInBounds = false;
-        int rowNextMovement = currentRow + rowMovement;
-        int columnNextMovement = currentColumn + columnMovement;
-        if(rowNextMovement > 0 && rowNextMovement < 8) isXInBounds = true;
-        if(columnNextMovement > 0 && columnNextMovement < 8) isYInBounds = true;
-        if(isXInBounds && isYInBounds) return true;
-        return false;
-    }
-    */
-    
     public static boolean isInBounds(int row, int column){
         boolean isXInBounds = false;
         boolean isYInBounds = false;
@@ -114,16 +94,14 @@ public class Chess{
         for(int i = 0; i < 8; i++){
             int rowMovement = currentRow + horizontal[i];
             int columnMovement = currentColumn + vertical[i];
-            // if(isInBounds(currentRow, currentColumn, rowMovement, columnMovement))
             if(isInBounds(rowMovement, columnMovement))
                 if(!board[rowMovement][columnMovement])
                     availableMovements.add(i);
-                    // System.out.println("Position: X->" + rowMovement + ", Y->" + columnMovement + " ... Is not available");
-                //else availableMovements.add(i);
         }
         return availableMovements;
     }
 
+    /*
     public static int getMin(List<Integer> collection){
         int min = collection.get(0);
         for(int i = 1; i < collection.size(); i++){
@@ -139,5 +117,6 @@ public class Chess{
         }
         return max;
     }
+    */
 
 }
